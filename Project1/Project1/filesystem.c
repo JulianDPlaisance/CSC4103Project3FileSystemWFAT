@@ -1,4 +1,4 @@
-
+#include "filesystem.h"
 /*
 
 Your filesystem will provide:
@@ -7,7 +7,7 @@ a set of file operations.
 
 You may implement either a FAT or inode-based block allocation strategy for files, but
 you must document which strategy is used.
-       >>>>>>>>> We must choose which one to use! <<<<<<<<<<<<<
+	   >>>>>>>>> We must choose which one to use! <<<<<<<<<<<<<
 
 I will provide the implementation of a persistent "raw"
 software disk (available via softwaredisk.h / softwaredisk.c), which supports reads/writes
@@ -32,15 +32,61 @@ printable ASCII characters.
 
 
 
-int main() {
+//int main() {
+//
+//
+//
+//
+//
+//
+//
+//
+//}
 
+int checkMode(FileMode mode) {
+	if (mode == READ_ONLY) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
+}
 
+int checkError(FSError error) {
+	switch (error) {
 
+	case FS_NONE:
+		return 0;
+		break;
 
+	case FS_OUT_OF_SPACE:
+		return 1;
+		break;
 
+	case FS_FILE_NOT_OPEN:
+		return 2;
+		break;
 
+	case FS_FILE_OPEN:
+		return 3;
+		break;
 
+	case FS_FILE_NOT_FOUND:
+		return 4;
+		break;
 
+	case FS_FILE_READ_ONLY:
+		return 5;
+		break;
+
+	case FS_FILE_ALREADY_EXISTS:
+		return 6;
+		break;
+
+	default:
+		return -1;
+		break;
+	}
 }
 
 public File open_file(char *name, FileMode mode) {
