@@ -27,7 +27,7 @@ init_software_disk();
 
 
 if (there was an error){
-	printf("Error initializing file system. \n")
+	printf("Error initializing file system. \n") //asdfmovie <3
 	return 1;
 }
 else
