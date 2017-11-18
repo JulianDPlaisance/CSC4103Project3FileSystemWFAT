@@ -42,3 +42,39 @@ int main() {
 
 
 }
+
+public File open_file(char *name, FileMode mode) {
+
+}
+
+public File create_file(char *name, FileMode mode) {
+
+}
+
+public void close_file(File file) {
+
+}
+
+public unsigned long read_file(File file, void *buf, unsigned long numbytes) {
+
+}
+
+public unsigned long write_file(File file, void *buf, unsigned long numbytes) {
+
+}
+
+public void seek_file(File file, unsigned long bytepos) {
+
+}
+
+public int delete_file(char *name) {
+
+}
+
+public int file_exists(char *name) {
+
+}
+
+private void fs_print_error(void) {
+
+}
