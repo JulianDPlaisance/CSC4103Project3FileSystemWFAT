@@ -27,7 +27,7 @@ init_software_disk();
 
 
 if (there was an error){
-	printf("Error initializing file system. ")
+	printf("Error initializing file system. \n")
 	return 1;
 }
 else
