@@ -89,8 +89,38 @@ int checkError(FSError error) {
 	}
 }
 
-public File open_file(char *name, FileMode mode) {
+//for which, 0 for Open_file & 1 for Create_file
+void findFileExist(FileInternals file, int which, char *name) {
 
+	//stuff();
+
+	if (/*found*/) {//if a file is found
+		if (which) {//if create_file is calling and the file is found
+			file->err = FS_FILE_ALREADY_EXISTS
+		}
+		else {//if open_file is calling and the file is found
+
+		}
+	}
+	else {//if a file is not found
+		if (!which) {//if Open_file is calling and the file is not found
+			file->err = FS_FILE_NOT_FOUND;
+		}
+		else {//if create_file is calling and the file is not found
+
+		}
+	}
+}
+
+public File open_file(char *name, FileMode mode) {
+	FileInternals file;
+
+	if (checkMode(mode)) {
+		
+	}
+	else {
+
+	}
 }
 
 public File create_file(char *name, FileMode mode) {
