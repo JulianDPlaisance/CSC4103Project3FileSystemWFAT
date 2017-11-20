@@ -2,6 +2,7 @@
 // main private file type
 typedef FileInternals {
 		// private—you implement this
+	FSError err;
 } FileInternals;
 
 // file type used by user code
