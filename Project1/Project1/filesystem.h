@@ -2,6 +2,11 @@
 // main private file type
 typedef FileInternals {
 		// private—you implement this
+
+	char[255] name;
+	int sizeInBytes;
+	File file;
+	FileMode mode;
 	FSError err;
 } FileInternals;
 
