@@ -115,6 +115,7 @@ void findFileExist(FileInternals file, int which, char *name) {
 public File open_file(char *name, FileMode mode) {
 	FileInternals file;
 
+	file->name;
 	if (checkMode(mode)) {
 		
 	}
