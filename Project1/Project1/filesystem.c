@@ -152,7 +152,7 @@ void seek_file(File file, unsigned long bytepos) {
 }
 
 unsigned long file_length(File file) {
-	return 0;
+	return file->sizeInBytes;
 }
 
 int delete_file(char *name) {
