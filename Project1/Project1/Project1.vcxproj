@@ -111,6 +111,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="exercisesoftwaredisk.c" />
+    <ClCompile Include="filesystem.c" />
+    <ClCompile Include="formatfs.c" />
+    <ClCompile Include="fs_testcases\testfs0.c" />
+    <ClCompile Include="fs_testcases\testfs1.c" />
+    <ClCompile Include="fs_testcases\testfs2.c" />
+    <ClCompile Include="fs_testcases\testfs3.c" />
+    <ClCompile Include="fs_testcases\testfs4a.c" />
+    <ClCompile Include="fs_testcases\testfs4b.c" />
+    <ClCompile Include="softwaredisk.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="filesystem.h" />
+    <ClInclude Include="softwaredisk.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fs_testcases\test_fs.sh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

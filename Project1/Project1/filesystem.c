@@ -143,8 +143,7 @@ void seek_file(File file, unsigned long bytepos) {
 
 }
 
-unsigned long file_length(File file)
-{
+unsigned long file_length(File file) {
 	return 0;
 }
 

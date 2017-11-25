@@ -1,6 +1,6 @@
 
 // main private file type
-typedef FileInternals {
+typedef struct FileInternals {
 		// private—you implement this
 
 	char[255] name;
@@ -78,4 +78,4 @@ void fs_print_error(void);
 // filesystem error code set (set by each filesystem function)
 extern FSError fserror;
  
-}
+//}
