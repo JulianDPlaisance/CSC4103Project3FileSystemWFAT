@@ -96,14 +96,14 @@ void findFileExist(FileInternals file, int which, char *name) {
 	
 	if (found) {//if a file is found
 		if (which) {//if create_file is calling and the file is found
-			file->err = FS_FILE_ALREADY_EXISTS;
+			file.err = FS_FILE_ALREADY_EXISTS;
 		}
 		else {//if open_file is calling and the file is found, do nothing because checking is in file->err
 		}
 	}
 	else {//if a file is not found
 		if (!which) {//if Open_file is calling and the file is not found
-			file->err = FS_FILE_NOT_FOUND;
+			file.err = FS_FILE_NOT_FOUND;
 		}
 		else {//if create_file is calling and the file is not found, do nothing because checking is in file->err
 		}
@@ -124,11 +124,19 @@ File open_file(char *name, FileMode mode) {
 }
 
 File create_file(char *name, FileMode mode) {
+	FileInternals file;
+	findFileExist(file, 1, name);
 	return 0;
 }
 
 void close_file(File file) {
-
+	//not sure how this exactly works, set everything to 0 or free(file);  Going with free(file) for now
+	//file->file = 0;
+	//file->err = 0;
+	//file->mode = 0;
+	//*(file->name) = 0;
+	//file->sizeInBytes = 0;
+	free(file);
 }
 
 unsigned long read_file(File file, void *buf, unsigned long numbytes) {

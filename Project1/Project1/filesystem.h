@@ -1,18 +1,3 @@
-
-// main private file type
-typedef struct FileInternals {
-		// private—you implement this
-
-	char[255] name;
-	int sizeInBytes;
-	File file;
-	FileMode mode;
-	FSError err;
-} FileInternals;
-
-// file type used by user code
-typedef FileInternals* File;
-
 // access mode for open_file() and create_file() 
 typedef enum {
 	READ_ONLY, READ_WRITE
@@ -29,6 +14,21 @@ typedef enum  {
   FS_FILE_READ_ONLY, 	  // attempted write to file opened for READ_ONLY
   FS_FILE_ALREADY_EXISTS  // attempted creation of file with existing name
 } FSError;
+
+
+// main private file type
+typedef struct FileInternals {
+	// private—you implement this
+
+	char name[255];
+	int sizeInBytes;
+	File file;
+	FileMode mode;
+	FSError err;
+} FileInternals;
+
+// file type used by user code
+typedef FileInternals* File;
 
 // function prototypes for filesystem API
 
