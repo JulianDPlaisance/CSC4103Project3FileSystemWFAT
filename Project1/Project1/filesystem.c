@@ -91,67 +91,68 @@ int checkError(FSError error) {
 
 //for which, 0 for Open_file & 1 for Create_file
 void findFileExist(FileInternals file, int which, char *name) {
-
+	int found = 1;
 	//stuff();
-
-	if (/*found*/) {//if a file is found
+	
+	if (found) {//if a file is found
 		if (which) {//if create_file is calling and the file is found
-			file->err = FS_FILE_ALREADY_EXISTS
+			file->err = FS_FILE_ALREADY_EXISTS;
+			return 0;
 		}
 		else {//if open_file is calling and the file is found
-
+			return 1;
 		}
 	}
 	else {//if a file is not found
 		if (!which) {//if Open_file is calling and the file is not found
 			file->err = FS_FILE_NOT_FOUND;
+			return 0;
 		}
 		else {//if create_file is calling and the file is not found
-
+			return 1;
 		}
 	}
 }
 
-public File open_file(char *name, FileMode mode) {
+File open_file(char *name, FileMode mode) {
 	FileInternals file;
-
 	file->name;
 	if (checkMode(mode)) {
-		
+		findFileExist(file, 0, mode);
 	}
 	else {
 
 	}
 }
 
-public File create_file(char *name, FileMode mode) {
+File create_file(char *name, FileMode mode) {
 
 }
 
-public void close_file(File file) {
+void close_file(File file) {
 
 }
 
-public unsigned long read_file(File file, void *buf, unsigned long numbytes) {
+unsigned long read_file(File file, void *buf, unsigned long numbytes) {
 
 }
 
-public unsigned long write_file(File file, void *buf, unsigned long numbytes) {
+unsigned long write_file(File file, void *buf, unsigned long numbytes) {
 
 }
 
-public void seek_file(File file, unsigned long bytepos) {
+void seek_file(File file, unsigned long bytepos) {
 
 }
 
-public int delete_file(char *name) {
+int delete_file(char *name) {
 
 }
 
-public int file_exists(char *name) {
+int file_exists(char *name) {
 
 }
 
-private void fs_print_error(void) {
+void fs_print_error(void) {
 
 }
