@@ -7,75 +7,58 @@ init_software_disk(), which destroys all existing data.
 
 */
 
-/*
- *
- * Ask Golden if using this try/catch structure from http://www.di.unipi.it/~nids/docs/longjump_try_trow_catch.html
- *  is appropriate, with appropriate crediting
- *
- *
- *
-#include <stdio.h>
-#include <setjmp.h>
-
-#define TRY do{ jmp_buf ex_buf__; if( !setjmp(ex_buf__) ){
-#define CATCH } else {
-#define ETRY } }while(0)
-#define THROW longjmp(ex_buf__, 1)
-
-int
-main(int argc, char** argv)
-{
-   TRY
-   {
-      printf("In Try Statement\n");
-      THROW;
-      printf("I do not appear\n");
-   }
-   CATCH
-   {
-      printf("Got Exception!\n");
-   }
-   ETRY;
-
-   return 0;
- *
- *
- */
 
 
 #include "softwaredisk.h"
+#include <time.h>
+#include <stdlib.h>
+
 
 int init_software_disk(){
 
-try: {
-//destroy existing data
+sderror=SD_NONE;
 
-void * bufr[SOFTWARE_DISK_BLOCK_SIZE] = {0};
+srand(time(NULL));                          //sets random seed
+int rand = rand() % software_disk_size() ;  //keeps number within disk bounds
 
-for (int softi = 1; softi <= SOFTWARE_DISK_BLOCK_SIZE; softi++){
-write_sd_block(bufr, SOFTWARE_DISK_BLOCK_SIZE)
+//creates a buffer the size of software disk
+//and populates with 0
+
+void * bufr[software_disk_size()] = {0};
+
+//writes 0's over every block in the software disk
+
+for (int softi = 1; softi <= software_disk_size(); softi++){
+	write_sd_block(bufr, software_disk_size());
+	}
+
+
+//reading from a random block to determine if it was properly zeroed
+
+if (read_sd_block(bufr, rand) = 0){
+	sd_print_error();
+	return 1;
+	}
+else {   //Returns errors due to failure to initialize
+	sderror=SD_NOT_INIT;
+	sd_print_error();
+	printf(" - formatfs.c error")
+	}
+    return 0;
 }
 
-//create new instances of data
-
-}
-return 1;
-
-catch:
-return 0;
-}
 
 int main(){
 
 
 //Do file system initialization
-	//maybe try/catch to make the error checking?
 
 init_software_disk();
 
 
-if (there was an error){
-	printf("Error initializing file system. \n")
+//Return 0 if the sderror is not SD_NONE, indicating a failure
+
+if (sderror==SD_NONE){
 	return 1;
 }
 else
