@@ -1,4 +1,4 @@
-#include "filesystem.h"
+
 /*
 
 Your filesystem will provide:
@@ -7,7 +7,7 @@ a set of file operations.
 
 You may implement either a FAT or inode-based block allocation strategy for files, but
 you must document which strategy is used.
-	   >>>>>>>>> We must choose which one to use! <<<<<<<<<<<<<
+       >>>>>>>>> We must choose which one to use! <<<<<<<<<<<<<
 
 I will provide the implementation of a persistent "raw"
 software disk (available via softwaredisk.h / softwaredisk.c), which supports reads/writes
@@ -30,139 +30,100 @@ printable ASCII characters.
 
 */
 
+#include <stdio.h>
+#include "filesystem.h"
+#include "formatfs.c"
 
 
-//int main() {
-//
-//
-//
-//
-//
-//
-//
-//
-//}
+int main() {
 
-int checkMode(FileMode mode) {
-	if (mode == READ_ONLY) {
-		return 0;
-	}
-	else {
-		return 1;
-	}
+char input[99];
+
+printf("To create a file, type 1. \n");
+printf("To open an existing file, type 2. \n");
+printf("To delete a file, type 3. \n");
+printf("To exit, type 4. \n");
+printf("Hit Enter after your selection. \n\n");
+
+scanf(input);
+
+switch (input)
+
+case 1: {
+	char fname[256];
+	printf("Please enter the name of the file to create:");
+	scanf(fname);
+	create_file(fname, READ_WRITE);
+
+	//When done writing, needs to allocate new space in FAT and write contents in that block
+	void fbuf;
+	write_file(fname, fbuf, 512);
+	//Perhaps use the contents of "fbuf" above and copy that into the block?
+
+
+	close_file(fname);
 }
+	break;
+case 2: {
+	char fname[256];
+	printf("Please enter the name of the file to open: ");
+	scanf(fname);
 
-int checkError(FSError error) {
-	switch (error) {
+	//Checking whether file exists
 
-	case FS_NONE:
-		return 0;
-		break;
-
-	case FS_OUT_OF_SPACE:
-		return 1;
-		break;
-
-	case FS_FILE_NOT_OPEN:
-		return 2;
-		break;
-
-	case FS_FILE_OPEN:
-		return 3;
-		break;
-
-	case FS_FILE_NOT_FOUND:
-		return 4;
-		break;
-
-	case FS_FILE_READ_ONLY:
-		return 5;
-		break;
-
-	case FS_FILE_ALREADY_EXISTS:
-		return 6;
-		break;
-
-	default:
-		return -1;
+	if (file_exists(fname) == 0) {
+		printf("File does not exist.");
 		break;
 	}
-}
 
-//for which, 0 for Open_file & 1 for Create_file
-void findFileExist(FileInternals file, int which, char *name) {
-	int found = 1;
-	//stuff();
-	
-	if (found) {//if a file is found
-		if (which) {//if create_file is calling and the file is found
-			file.err = FS_FILE_ALREADY_EXISTS;
-		}
-		else {//if open_file is calling and the file is found, do nothing because checking is in file->err
-		}
+	open_file(fname, READ_WRITE);
+
+	//When done writing, needs to find the allocated space and overwrite all contents in that block
+	void fbuf;
+	write_file(fname, fbuf, 512);
+	//Perhaps use the contents of "fbuf" above and copy that into the block?
+	//The return value of write_file ****must**** be used to check for out of space errors!
+
+	close_file(fname);
+}
+	break;
+case 3: {
+	char fname[256];
+	printf("Please enter the name of the file to delete: ");
+	scanf(fname);
+
+	//Deletion user confirmation
+	printf("Deleting file '");
+	printf(fname);
+	printf("'. Are you sure? y/n \n");
+	char choice;
+	scanf(choice);
+
+	if (choice == 'y') {
+
+		//Deletes file and mentions error upon success or failure
+		delete_file(fname);
+		if (fserror == 0)
+			printf("Error deleting file. \n");
+		else
+           printf("File deleted.");
 	}
-	else {//if a file is not found
-		if (!which) {//if Open_file is calling and the file is not found
-			file.err = FS_FILE_NOT_FOUND;
-		}
-		else {//if create_file is calling and the file is not found, do nothing because checking is in file->err
-		}
-	}
+	else if (choice == "n")
+		printf("Ok, no action was taken. \n");
+	else
+		printf("Invalid input, no action was taken. \n");
+
+main();
+}
+	break;
+case 4:
+	break;
+default: { printf("Invalid choice. Please try again.");
+
+	main();
 }
 
-File open_file(char *name, FileMode mode) {
-	FileInternals file;
-	findFileExist(file, 0, name);
+printf("Closing filesystem...")
 
-	if (checkMode(mode)) {
-		
-	}
-	else {
-
-	}
-	return 0;
-}
-
-File create_file(char *name, FileMode mode) {
-	FileInternals file;
-	findFileExist(file, 1, name);
-	return 0;
-}
-
-void close_file(File file) {
-	//not sure how this exactly works, set everything to 0 or free(file);  Going with free(file) for now
-	//file->file = 0;
-	//file->err = 0;
-	//file->mode = 0;
-	//*(file->name) = 0;
-	//file->sizeInBytes = 0;
-	free(file);
-}
-
-unsigned long read_file(File file, void *buf, unsigned long numbytes) {
-	return 0;
-}
-
-unsigned long write_file(File file, void *buf, unsigned long numbytes) {
-	return 0;
-}
-
-void seek_file(File file, unsigned long bytepos) {
-
-}
-
-unsigned long file_length(File file) {
-	return file->sizeInBytes;
-}
-
-int delete_file(char *name) {
-	return 0;
-}
-
-int file_exists(char *name) {
-	return 0;
-}
-
-void fs_print_error(void) {
-
+return 0;
 }
