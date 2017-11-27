@@ -1,4 +1,5 @@
 #include "filesystem.h"
+#include "softwaredisk.c"
 /*
 
 Your filesystem will provide:
@@ -144,6 +145,9 @@ unsigned long read_file(File file, void *buf, unsigned long numbytes) {
 }
 
 unsigned long write_file(File file, void *buf, unsigned long numbytes) {
+	//We should have an additional block for every 512 bytes plus 1(maybe 2) for remaining data
+	int numberOfBlocks = (numbytes / SOFTWARE_DISK_BLOCK_SIZE) + 1; 
+
 	return 0;
 }
 
