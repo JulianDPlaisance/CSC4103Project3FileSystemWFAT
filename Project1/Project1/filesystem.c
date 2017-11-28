@@ -31,28 +31,35 @@ printable ASCII characters.
 
 */
 
-
-
-//int main() {
-//
-//
-//
-//
-//
-//
-//
-//
-//}
-
+/*
+checkMode is a helper function to take the enum of FileMode and convert it into an integer for simplifing if/switch statements
+0 being READ_ONLY,
+1 being READ_WRITE
+-1 reserved for errors
+*/
 int checkMode(FileMode mode) {
 	if (mode == READ_ONLY) {
 		return 0;
 	}
-	else {
+	else if(mode == READ_WRITE) {
 		return 1;
+	}
+	else {
+		return -1;
 	}
 }
 
+/*
+checkError is a helper function to take the enum of FSError and convert it into an integer for simplifing if/switch statements
+0 being FS_NONE,
+1 being FS_OUT_OF_SPACE
+2 being FS_FILE_NOT_OPEN
+3 being FS_FILE_OPEN
+4 being FS_FILE_NOT_FOUND
+5 being FS_FILE_READ_ONLY
+6 being FS_FILE_ALREADY_EXISTS
+-1 is reserved for errors... that aren't FSErrors
+*/
 int checkError(FSError error) {
 	switch (error) {
 
@@ -90,29 +97,49 @@ int checkError(FSError error) {
 	}
 }
 
-//for which, 0 for Open_file & 1 for Create_file
-void findFileExist(FileInternals file, int which, char *name) {
+/*
+findFileExist is a helper function for both open_file & create_file functions to reduce redundant code
+FileInternals *file is a pointer to an empty or null file object
+int which tells this function which function is calling it, open_file is represented by 0 and create_file is represented by 1
+char *name is a pointer to a character (array) representing the file name that the system has to search for, to create or open
+
+The system searches for a file where file_name == *name and tries to set *tmp to this file if possible
+If the system has found a file with filename == *name and open_file is calling it then sets *file to point to what *tmp points to
+If the system has found a file with filename == *name and create_file is calling it then sets *file->err to FS_FILE_ALREADY_EXISTS
+If the system fails to find a file where filename == *name and open_file is calling it then it sets *file->err to FS_FILE_NOT_FOUND
+If the system fails to find a file where filename == *name and create_file is calling it then it sets *file to point to what *tmp points to
+*/
+void findFileExist(FileInternals *file, int which, char *name) {
 	int found = 1;
+	FileInternals *tmp;
 	//stuff();
 	
-	if (found) {//if a file is found
-		if (which) {//if create_file is calling and the file is found
-			file.err = FS_FILE_ALREADY_EXISTS;
+	if (found) {
+		if (!which) {
+			
 		}
-		else {//if open_file is calling and the file is found, do nothing because checking is in file->err
+		else {
+			file->err = FS_FILE_ALREADY_EXISTS;
 		}
 	}
-	else {//if a file is not found
-		if (!which) {//if Open_file is calling and the file is not found
-			file.err = FS_FILE_NOT_FOUND;
+	else {
+		if (!which) {
+			file->err = FS_FILE_NOT_FOUND;
 		}
-		else {//if create_file is calling and the file is not found, do nothing because checking is in file->err
+		else {
 		}
 	}
 }
 
+/*
+This function searches the existing files for a filename == *name
+and opens the file under FileMode, in either READ_ONLY or READ_WRITE
+A FileInternals null pointer is created , then it calls findFileExist
+if the FSError of the *file is FS_NONE then it continues to set the mode
+for the file 
+*/
 File open_file(char *name, FileMode mode) {
-	FileInternals file;
+	FileInternals *file;
 	findFileExist(file, 0, name);
 
 	if (checkMode(mode)) {
@@ -125,7 +152,7 @@ File open_file(char *name, FileMode mode) {
 }
 
 File create_file(char *name, FileMode mode) {
-	FileInternals file;
+	FileInternals *file;
 	findFileExist(file, 1, name);
 	return 0;
 }
