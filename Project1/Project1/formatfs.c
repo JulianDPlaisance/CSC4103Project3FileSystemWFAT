@@ -12,7 +12,7 @@ init_software_disk(), which destroys all existing data.
 #include <stdlib.h>
 
 
-int main(){
+int initing(){
 
 
 //Do file system initialization
