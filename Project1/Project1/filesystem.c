@@ -17,7 +17,6 @@ printable ASCII characters.
 #include <stdio.h>
 #include "filesystem.h"
 #include "formatfs.c"
-#include "softwaredisk.c"
 
 // read at most 'numbytes' of data from 'file' into 'buf', starting at the
 // current file position.  Returns the number of bytes read. If end of file is reached,
@@ -355,7 +354,7 @@ printf("Hit Enter after your selection. \n\n");
 
 scanf(input);
 
-switch (input)
+switch (input) {
 
 case 1: {
 	char fname[256];
@@ -378,8 +377,9 @@ case 1: {
 
 
 	close_file(fname);
-}
 	break;
+}
+
 case 2: {
 	char fname[256];
 	printf("Please enter the name of the file to open: ");
@@ -402,8 +402,9 @@ case 2: {
 	//The return value of write_file ****must**** be used to check for out of space errors!
 
 	close_file(fname);
-}
 	break;
+}
+
 case 3: {
 	char fname[256];
 	printf("Please enter the name of the file to delete: ");
@@ -424,21 +425,24 @@ case 3: {
 			printf("Error deleting file. \n");
 		else
            printf("File deleted.");
-	}
+	    }
 	else if (choice == "n")
 		printf("Ok, no action was taken. \n");
 	else
 		printf("Invalid input, no action was taken. \n");
 
 main();
+break;
 }
-	break;
+
 case 4:
 	break;
+
 default: { printf("Invalid choice. Please try again.");
 
 	main();
-}
+   }
+};
 
 printf("Closing filesystem...")
 
