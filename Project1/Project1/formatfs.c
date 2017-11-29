@@ -7,7 +7,7 @@ init_software_disk(), which destroys all existing data.
 
 */
 
-#include "softwaredisk.h"
+#include "softwaredisk.c"
 #include <time.h>
 #include <stdlib.h>
 
