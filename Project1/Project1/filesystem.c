@@ -141,18 +141,27 @@ for the file to READ_ONLY or READ_WRITE
 File open_file(char *name, FileMode mode) {
 	FileInternals *file;
 	findFileExist(file, 0, name);
-	}
-	else {
-
+	if (checkError(file->err)) {
+		return NULL;
 	}
 	file->mode = mode;
 	return file;
 }
 
+
+/*
+This function searches the existing files for a filename == *name and
+if it exists then it fails, otherwise if no such file exists then create
+a new file where filename = *name and sets mode to READ_ONLY or READ_WRITE
+*/
 File create_file(char *name, FileMode mode) {
 	FileInternals *file;
 	findFileExist(file, 1, name);
-	return 0;
+	if (checkError(file->err)) {
+		return NULL;
+	}
+	file->mode = mode;
+	return file;
 }
 
 void close_file(File file) {
