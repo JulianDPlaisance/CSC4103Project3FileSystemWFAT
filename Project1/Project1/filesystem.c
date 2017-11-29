@@ -12,6 +12,9 @@ capacity of the software disk) and set appropriate error conditions.
 • Your filesystem must allow filenames of at least 255 characters in length, composed of
 printable ASCII characters.
 • Your filesystem must provide the filesystem.h interface.
+
+Github link: https://github.com/JulianDPlaisance/FountainOfDreams
+Julian Plaisance PAWSID jplais8
 */
 
 #include <stdio.h>
@@ -319,113 +322,114 @@ void fs_print_error(void) {
 
 
 
-int main() {
-
-	initing();
-	int true = 1;
-	while (true) {
-		printf("Welcome to our 4101 Filesystem. Our format is FAT. \n");
-		File *fp;
-
-		//Keeping track of the number of files to know which block to write to
-		int numFiles = 0;
-
-		char input[99];
-
-		printf("To create a file, type 1. \n");
-		printf("To open an existing file, type 2. \n");
-		printf("To delete a file, type 3. \n");
-		printf("To exit, type 4. \n");
-		printf("Hit Enter after your selection. \n\n");
-
-		scanf(input);
-
-		switch (*input) {
-
-		case 1: {
-			char *fname[256];
-			printf("Please enter the name of the file to create:");
-
-			//Place input into a file buffer
-			//void *fbuf = scanf(*fname);
-
-			//Creating the file with its name and in READ_WRITE state to edit immediately
-			*fp = create_file(*fname, READ_WRITE);
-
-			//Writing the file contents to the new file's block location, based on current number of files
-			//write_file(*fp, fbuf, ++numFiles);
-
-			//When done writing, needs to allocate new space in FAT and write contents in that block
-			void *fatBuf[512];
-			write_sd_block(fatBuf, 0);   //consider concatenating, if possible?
-
-			//Perhaps use the contents of "fbuf" above and copy that into the block?
-
-
-			close_file(*fp);
-		}
-
-		case 2: {
-			char *fname[256];
-			printf("Please enter the name of the file to open: ");
-			scanf(*fname);
-
-			//Checking whether file exists
-
-			if (file_exists(*fname) == 0) {
-				printf("File does not exist.");
-			}
-
-			*fp = open_file(*fname, READ_WRITE);
-
-			//When done writing, needs to find the allocated space and overwrite all contents in that block
-			void *fbuf;
-			write_file(*fp, fbuf, 0); //Replace 0 with block location mentioned in fat!
-
-			//Perhaps use the contents of "fbuf" above and copy that into the block?
-			//The return value of write_file ****must**** be used to check for out of space errors!
-
-			close_file(*fp);
-		}
-
-		case 3: {
-			char *fname[256];
-			printf("Please enter the name of the file to delete: ");
-			scanf(*fname);
-
-			//Deletion user confirmation
-			printf("Deleting file '");
-			printf(*fname);
-			printf("'. Are you sure? y/n \n");
-			char *choice;
-			scanf(choice);
-
-			if (*choice == 'y') {
-
-				//Deletes file and mentions error upon success or failure
-				delete_file(*fname);
-				if (fserror == 0)
-					printf("Error deleting file. \n");
-				else
-					printf("File deleted.");
-			}
-			else if (choice == "n")
-				printf("Ok, no action was taken. \n");
-			else
-				printf("Invalid input, no action was taken. \n");
-			break;
-		}
-
-		case 4:
-			true = 0;
-			break;
-
-		default:
-			printf("Invalid choice. Please try again.");
-			break;
-		}
-	}
-	printf("Closing filesystem...");
-
-	return 0;
-}
+//int main() {
+//
+//	initing();
+//	int true = 1;
+//	while (true) {
+//		printf("Welcome to our 4101 Filesystem. Our format is FAT. \n");
+//		File *fp;
+//
+//		//Keeping track of the number of files to know which block to write to
+//		int numFiles = 0;
+//
+//		char input[99];
+//
+//		printf("To create a file, type 1. \n");
+//		printf("To open an existing file, type 2. \n");
+//		printf("To delete a file, type 3. \n");
+//		printf("To exit, type 4. \n");
+//		printf("Hit Enter after your selection. \n\n");
+//
+//		scanf("%s", &input);
+//		printf("%s\n", input[0]);
+//		printf("123456789");
+//		switch (*input) {
+//
+//		case 1: {
+//			char *fname[256];
+//			printf("Please enter the name of the file to create:");
+//
+//			//Place input into a file buffer
+//			scanf("%s", *fname);
+//
+//			//Creating the file with its name and in READ_WRITE state to edit immediately
+//			*fp = create_file(*fname, READ_WRITE);
+//
+//			//Writing the file contents to the new file's block location, based on current number of files
+//			//write_file(*fp, fbuf, ++numFiles);
+//
+//			//When done writing, needs to allocate new space in FAT and write contents in that block
+//			void *fatBuf[512];
+//			write_sd_block(fatBuf, 0);   //consider concatenating, if possible?
+//
+//			//Perhaps use the contents of "fbuf" above and copy that into the block?
+//
+//
+//			close_file(*fp);
+//		}
+//
+//		case 2: {
+//			char *fname[256];
+//			printf("Please enter the name of the file to open: ");
+//			scanf("%s", *fname);
+//
+//			//Checking whether file exists
+//
+//			if (file_exists(*fname) == 0) {
+//				printf("File does not exist.");
+//			}
+//
+//			*fp = open_file(*fname, READ_WRITE);
+//
+//			//When done writing, needs to find the allocated space and overwrite all contents in that block
+//			void *fbuf;
+//			write_file(*fp, fbuf, 0); //Replace 0 with block location mentioned in fat!
+//
+//			//Perhaps use the contents of "fbuf" above and copy that into the block?
+//			//The return value of write_file ****must**** be used to check for out of space errors!
+//
+//			close_file(*fp);
+//		}
+//
+//		case 3: {
+//			char *fname[256];
+//			printf("Please enter the name of the file to delete: ");
+//			scanf("%s", *fname);
+//
+//			//Deletion user confirmation
+//			printf("Deleting file '");
+//			printf(*fname);
+//			printf("'. Are you sure? y/n \n");
+//			char *choice;
+//			scanf("%s", choice);
+//
+//			if (*choice == 'y') {
+//
+//				//Deletes file and mentions error upon success or failure
+//				delete_file(*fname);
+//				if (fserror == 0)
+//					printf("Error deleting file. \n");
+//				else
+//					printf("File deleted.");
+//			}
+//			else if (choice == "n")
+//				printf("Ok, no action was taken. \n");
+//			else
+//				printf("Invalid input, no action was taken. \n");
+//			break;
+//		}
+//
+//		case 4:
+//			true = 0;
+//			break;
+//
+//		default:
+//			printf("Invalid choice. Please try again.\n\n");
+//			break;
+//		}
+//	}
+//	printf("Closing filesystem...");
+//
+//	return 0;
+//}
