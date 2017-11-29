@@ -22,7 +22,8 @@ typedef struct FileInternals {
 
 	char name[255];
 	int sizeInBytes;
-	File file;
+	int pos;
+	FILE file;
 	FileMode mode;
 	FSError err;
 } FileInternals;
