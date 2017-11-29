@@ -1,18 +1,4 @@
 /*
-
-Your filesystem will provide:
-a flat namespace (e.g., there is only a single root directory and no subdirectories) and
-a set of file operations.
-
-You may implement either a FAT or inode-based block allocation strategy for files, but
-you must document which strategy is used.
-	   >>>>>>>>> We must choose which one to use! <<<<<<<<<<<<<
-
-I will provide the implementation of a persistent "raw"
-software disk (available via softwaredisk.h / softwaredisk.c), which supports reads/writes
-of fixed-sized blocks (numbered 0..software_disk_size() - 1).
-
-/*
 Your goal is to wrap a higher level filesystem interface around my software disk.
 It is your responsibility to allocate blocks for file allocation, the directory structure, and file data.
 You may use any sensible technique for tracking free disk blocks.
@@ -134,7 +120,8 @@ else
 }
 
 /*
-checkMode is a helper function to take the enum of FileMode and convert it into an integer for simplifing if/switch statements
+checkMode is a helper function to take the enum of FileMode and convert it
+into an integer for simplifying if/switch statements
 0 being READ_ONLY,
 1 being READ_WRITE
 -1 reserved for errors
@@ -152,7 +139,8 @@ int checkMode(FileMode mode) {
 }
 
 /*
-checkError is a helper function to take the enum of FSError and convert it into an integer for simplifing if/switch statements
+checkError is a helper function to take the enum of FSError and convert it
+into an integer for simplifying if/switch statements
 0 being FS_NONE,
 1 being FS_OUT_OF_SPACE
 2 being FS_FILE_NOT_OPEN
@@ -202,23 +190,48 @@ int checkError(FSError error) {
 /*
 findFileExist is a helper function for both open_file & create_file functions to reduce redundant code
 FileInternals *file is a pointer to an empty or null file object
-int which tells this function which function is calling it, open_file is represented by 0 and create_file is represented by 1
-char *name is a pointer to a character (array) representing the file name that the system has to search for, to create or open
 
-The system searches for a file where file_name == *name and tries to set *tmp to this file if possible
-If the system has found a file with filename == *name and open_file is calling it then sets *file to point to what *tmp points to
-If the system has found a file with filename == *name and create_file is calling it then sets *file->err to FS_FILE_ALREADY_EXISTS
-If the system fails to find a file where filename == *name and open_file is calling it then it sets *file->err to FS_FILE_NOT_FOUND
-If the system fails to find a file where filename == *name and create_file is calling it then it sets *file to point to what *tmp points to
+int "which" tells this function which function is calling it: open_file is
+represented by 0 and create_file is represented by 1
+
+char *name is a pointer to a character (array) representing the file name that the
+system has to search for, to create or open
+
+The system then searches for a file where file_name == *name and tries to
+ set *tmp to this file if possible.
+
+If the system has found a file with filename == *name and open_file is calling it,
+ then it sets *file to point to what *tmp points to.
+If the system has found a file with filename == *name and create_file is calling it,
+ then sets *file->err to FS_FILE_ALREADY_EXISTS.
+If the system fails to find a file where filename == *name and open_file is calling it,
+ then it sets *file->err to FS_FILE_NOT_FOUND.
+If the system fails to find a file where filename == *name and create_file is calling it,
+ then it sets *file to point to what *tmp points to.
 */
 void findFileExist(FileInternals *file, int which, char *name) {
-	int found = 1;
+	int found = 0;
+	void *bufrr;
+	void *namePnt;
 	FileInternals *tmp;
-	//stuff();
-	
+
+	//search FAT (block 0) for name; check every 2nd block's pointer data
+	for (int srch = 0; srch <= 512; (srch+1)++ ){
+
+		// reads a block of data into 'bufrr' from FAT.
+		read_sd_block(*bufrr, 0);
+
+		//Reads a pointer to name data from FAT
+		namePnt = bufrr[srch];
+
+		//If this pointer's data is the same as *name, it exists
+		if (*namePnt == *name)
+		found = 1;
+	}
+
 	if (found) {
 		if (!which) {
-			
+
 		}
 		else {
 			file->err = FS_FILE_ALREADY_EXISTS;
@@ -262,11 +275,11 @@ return 0;
 
 /*
 This function searches the existing files for a filename == *name
-and opens the file under FileMode, in either READ_ONLY or READ_WRITE
-A FileInternals null pointer is created, then it calls findFileExist
-if the FSError of the *file is FS_NONE then it continues to check the mode
-to see if the file is already open, and if it is fail, otherwise
-set the mode for the file to READ_ONLY or READ_WRITE
+and opens the file under FileMode, in either READ_ONLY or READ_WRITE.
+A FileInternals null pointer is created, then it calls findFileExist.
+If the FSError of the *file is FS_NONE, then it continues to check the mode
+to see if the file is already open, and if it is it fails. Otherwise it
+sets the mode for the file to READ_ONLY or READ_WRITE.
 */
 File open_file(char *name, FileMode mode) {
 	FileInternals *file;
@@ -284,12 +297,12 @@ File open_file(char *name, FileMode mode) {
 
 /*
 This function searches the existing files for a filename == *name and
-if it exists then it fails, otherwise if no such file exists then create
-a new file where filename = *name and sets mode to READ_ONLY or READ_WRITE
-A FileInternals null pointer is created, then it calls findFileExist
-if the FSError of the *file is FS_NONE then it continues to check the mode
-to see if the file is already open, and if it is fail, otherwise
-set the mode for the file to READ_ONLY or READ_WRITE
+if it exists, then it fails. Otherwise if no such file exists, it creates
+a new file where filename = *name and sets mode to READ_ONLY or READ_WRITE.
+A FileInternals null pointer is created, then it calls findFileExist.
+If the FSError of the *file is FS_NONE then it continues to check the mode
+to see if the file is already open, and if it is it fails, otherwise it
+sets the mode for the file to READ_ONLY or READ_WRITE.
 */
 File create_file(char *name, FileMode mode) {
 	FileInternals *file;
@@ -314,11 +327,12 @@ void close_file(File file) {
 	free(file);
 }
 
-/*
+
 void fs_print_error(void) {
 
+	printf(fserror);
 }
-*/
+
 
 
 
