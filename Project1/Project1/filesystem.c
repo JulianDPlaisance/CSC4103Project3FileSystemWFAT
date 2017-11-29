@@ -129,19 +129,50 @@ void findFileExist(FileInternals *file, int which, char *name) {
 		else {
 		}
 	}
+	/*
+	int file_exists(char *name) {
+
+int exists = 0;
+void *bufrr;
+
+//search FAT (block 0) for name; check every 2nd block's pointer data
+for (int srch = 0; srch <= 512; (srch+1)++ ){
+
+	// reads a block of data into 'bufrr' from FAT.
+	read_sd_block(*bufrr, 0);
+
+	//Reads a pointer to name data from FAT
+	bufrr[srch] = //pointer here
+
+	//If this pointer's data is the same as *name, it exists
+	if (/*pointer/ == *name)
+	exists = 1;
+}
+
+if (exists = 1)
+return 1;
+else
+return 0;
+}
+
+	*/
 }
 
 /*
 This function searches the existing files for a filename == *name
 and opens the file under FileMode, in either READ_ONLY or READ_WRITE
 A FileInternals null pointer is created, then it calls findFileExist
-if the FSError of the *file is FS_NONE then it continues to set the mode
-for the file to READ_ONLY or READ_WRITE
+if the FSError of the *file is FS_NONE then it continues to check the mode
+to see if the file is already open, and if it is fail, otherwise
+set the mode for the file to READ_ONLY or READ_WRITE
 */
 File open_file(char *name, FileMode mode) {
 	FileInternals *file;
 	findFileExist(file, 0, name);
 	if (checkError(file->err)) {
+		return NULL;
+	}
+	if (checkMode(file->mode) != -1) {
 		return NULL;
 	}
 	file->mode = mode;
@@ -153,11 +184,18 @@ File open_file(char *name, FileMode mode) {
 This function searches the existing files for a filename == *name and
 if it exists then it fails, otherwise if no such file exists then create
 a new file where filename = *name and sets mode to READ_ONLY or READ_WRITE
+A FileInternals null pointer is created, then it calls findFileExist
+if the FSError of the *file is FS_NONE then it continues to check the mode
+to see if the file is already open, and if it is fail, otherwise
+set the mode for the file to READ_ONLY or READ_WRITE
 */
 File create_file(char *name, FileMode mode) {
 	FileInternals *file;
 	findFileExist(file, 1, name);
 	if (checkError(file->err)) {
+		return NULL;
+	}
+	if (checkMode(file->mode) != -1) {
 		return NULL;
 	}
 	file->mode = mode;
