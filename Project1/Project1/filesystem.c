@@ -134,21 +134,19 @@ void findFileExist(FileInternals *file, int which, char *name) {
 /*
 This function searches the existing files for a filename == *name
 and opens the file under FileMode, in either READ_ONLY or READ_WRITE
-A FileInternals null pointer is created , then it calls findFileExist
+A FileInternals null pointer is created, then it calls findFileExist
 if the FSError of the *file is FS_NONE then it continues to set the mode
-for the file 
+for the file to READ_ONLY or READ_WRITE
 */
 File open_file(char *name, FileMode mode) {
 	FileInternals *file;
 	findFileExist(file, 0, name);
-
-	if (checkMode(mode)) {
-		
 	}
 	else {
 
 	}
-	return 0;
+	file->mode = mode;
+	return file;
 }
 
 File create_file(char *name, FileMode mode) {
